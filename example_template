@@ -1,0 +1,32 @@
+# Template file for 'obs'
+pkgname=obs
+version=22.0.3
+revision=2
+wrksrc="obs-studio-${version}"
+only_for_archs="i686 x86_64 i686-musl x86_64-musl"
+build_style=cmake
+configure_args="-DOBS_VERSION_OVERRIDE=${version}"
+hostmakedepends="pkg-config swig"
+makedepends="LuaJIT-devel fdk-aac-devel ffmpeg-devel glu-devel jack-devel
+libXcomposite-devel libcurl-devel pulseaudio-devel python3-devel
+qt5-x11extras-devel speexdsp-devel v4l-utils-devel vlc-devel x264-devel"
+short_desc="Open Broadcaster Software"
+maintainer="lemmi <lemmi@nerd2nerd.org>"
+license="GPL-2.0-or-later"
+homepage="https://obsproject.com"
+changelog="https://github.com/obsproject/obs-studio/releases"
+distfiles="https://github.com/obsproject/obs-studio/archive/${version}.tar.gz"
+checksum="86a3dbfbec5eee8305ece08d4ce6e7993d20f15ea206b4ab1bdf424f2af74c12"
+
+obs-devel_package() {
+	short_desc+=" - development files"
+	depends="${sourcepkg}>=${version}_${revision}"
+	pkg_install() {
+		vmove usr/include
+		vmove usr/lib/cmake
+	}
+}
+
+# REMARKS:
+# lemmi writes: needed to remove vmove usr/lib/*.so from the devel package,
+# otherwise obs would pull it in.
